@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Centro de Mando v6.0 - Con Autocalificador en Tiempo Real (Lunes a Jueves)</title>
+    <title>TC1005S · Centro de Mando - Operación Rescate Digital</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@600;800&family=Space+Grotesk:wght@700;800&display=swap"
         rel="stylesheet">
@@ -189,6 +189,18 @@
             color: #00ff88;
         }
 
+        .t-btn-lock {
+            background: #31102f;
+            border-color: #f472b6;
+            color: #fbcfe8;
+        }
+
+        .t-btn-lock.unlocked {
+            background: #064e3b;
+            border-color: #00ff88;
+            color: #00ff88;
+        }
+
         .days-tabs {
             display: flex;
             gap: 5px;
@@ -225,10 +237,21 @@
             cursor: pointer;
         }
 
-        /* Panel de Control */
+        /* Reglas de Bloqueo para Modo Espectador (Alumno) */
+        body.student-mode .control-panel,
+        body.student-mode .teacher-only {
+            display: none !important;
+        }
+
+        body.projector-mode .control-panel,
+        body.projector-mode .mode-banner {
+            display: none !important;
+        }
+
+        /* Panel de Control del Profesor */
         .control-panel {
             background: rgba(15, 23, 42, 0.9);
-            border: 1px solid rgba(56, 189, 248, 0.3);
+            border: 1px solid rgba(0, 255, 136, 0.4);
             border-radius: 14px;
             padding: 10px 16px;
             margin-bottom: 12px;
@@ -237,11 +260,6 @@
             align-items: center;
             justify-content: space-between;
             gap: 8px;
-        }
-
-        body.projector-mode .control-panel,
-        body.projector-mode .mode-banner {
-            display: none !important;
         }
 
         .control-group {
@@ -345,7 +363,7 @@
 
         .mode-banner {
             background: rgba(30, 41, 59, 0.7);
-            border-left: 4px solid #00ff88;
+            border-left: 4px solid #38bdf8;
             padding: 7px 14px;
             border-radius: 8px;
             margin-bottom: 12px;
@@ -376,6 +394,13 @@
             gap: 16px;
             transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
             position: relative;
+        }
+
+        @media (max-width: 900px) {
+            .team-row {
+                grid-template-columns: 38px 1fr;
+                gap: 10px;
+            }
         }
 
         .team-row.rank-1 {
@@ -437,11 +462,6 @@
             font-weight: 800;
             color: #fff;
             cursor: pointer;
-        }
-
-        .team-name:hover {
-            color: #38bdf8;
-            text-decoration: underline;
         }
 
         .inspect-btn {
@@ -971,15 +991,15 @@
     </style>
 </head>
 
-<body>
+<body class="student-mode">
 
     <canvas id="confettiCanvas"></canvas>
 
     <!-- Encabezado con Cronómetro Expandible y Selector de Día -->
     <div class="header">
         <div class="title-box">
-            <h1>🚀 CENTRO DE MANDO v6.0: OPERACIÓN RESCATE DIGITAL</h1>
-            <p>AUTOCALIFICADOR EN TIEMPO REAL + CARRERA ESPACIAL · PROF. ALISON MUÑOZ CAPOTE</p>
+            <h1>🚀 TC1005S: OPERACIÓN RESCATE DIGITAL</h1>
+            <p>EL ARTE DE LA PROGRAMACIÓN · PROF. ALISON MUÑOZ CAPOTE · CAMPUS TOLUCA</p>
         </div>
 
         <!-- CRONÓMETRO EXPANDIBLE -->
@@ -993,11 +1013,12 @@
                 <div class="timer-progress-fill" id="timerProgressFill"></div>
             </div>
             <div class="timer-controls-row">
-                <button class="t-btn" onclick="startStopTimer()" id="timerPlayBtn" title="Iniciar / Pausar">▶</button>
-                <button class="t-btn" onclick="setTimerMinutes(5)">5m</button>
-                <button class="t-btn" onclick="setTimerMinutes(15)">15m</button>
-                <button class="t-btn" onclick="setTimerMinutes(30)">30m</button>
-                <button class="t-btn" onclick="customTimerMinutes()">✏️</button>
+                <button class="t-btn teacher-only" onclick="startStopTimer()" id="timerPlayBtn"
+                    title="Iniciar / Pausar">▶</button>
+                <button class="t-btn teacher-only" onclick="setTimerMinutes(5)">5m</button>
+                <button class="t-btn teacher-only" onclick="setTimerMinutes(15)">15m</button>
+                <button class="t-btn teacher-only" onclick="setTimerMinutes(30)">30m</button>
+                <button class="t-btn teacher-only" onclick="customTimerMinutes()">✏️</button>
                 <button class="t-btn t-btn-size" onclick="toggleTimerExpanded()" id="timerSizeBtn">⛶ Agrandar</button>
             </div>
         </div>
@@ -1010,17 +1031,18 @@
             <button class="day-tab" data-day="viernes" onclick="selectDay('viernes')">🏆 Viernes</button>
             <button class="view-toggle" id="viewModeBtn" onclick="toggleViewMode()">📊 Total Semana</button>
             <button class="t-btn" onclick="toggleSound()" id="soundBtn">🔊</button>
-            <button class="t-btn" onclick="toggleProjectorMode()">📺</button>
+            <button class="t-btn t-btn-lock" id="teacherLockBtn" onclick="toggleTeacherAuth()"
+                title="Desbloquear consola de Profesor (Tecla L)">🔒 Profesor</button>
         </div>
     </div>
 
-    <!-- Panel de Control Principal -->
+    <!-- Panel de Control Principal (Solo visible cuando el Profesor introduce su PIN) -->
     <div class="control-panel">
         <div class="control-group">
-            <label style="font-size:12px; color:#94a3b8; font-weight:700;">EQUIPO:</label>
+            <label style="font-size:12px; color:#00ff88; font-weight:800;">🔓 MODO PROFESOR · EQUIPO:</label>
             <select id="teamSelect"></select>
 
-            <button class="btn btn-autograde" onclick="openAutoGraderModal()">🤖 Autocalificar Tarea en Vivo</button>
+            <button class="btn btn-autograde" onclick="openAutoGraderModal()">🤖 Autocalificar Tarea</button>
             <button class="btn btn-gold" onclick="awardPlace(1, 500, 10, '🥇 1er Lugar')">🥇 1° (+500)</button>
             <button class="btn btn-silver" onclick="awardPlace(2, 350, 7, '🥈 2do Lugar')">🥈 2° (+350)</button>
             <button class="btn btn-bronze" onclick="awardPlace(3, 250, 5, '🥉 3er Lugar')">🥉 3° (+250)</button>
@@ -1031,7 +1053,9 @@
         <div class="control-group">
             <button class="btn btn-roulette" onclick="openRouletteModal()">🎰 Ruleta</button>
             <button class="btn btn-shop" onclick="openShopModal()">🛒 Power-Ups</button>
-            <button class="btn btn-backup" onclick="exportBackupJSON()">💾 Guardar (.json)</button>
+            <button class="btn btn-backup" onclick="exportBackupJSON()"
+                title="Guarda estado_mision.json y súbelo al repo para sincronizar con alumnos">💾 Publicar
+                estado_mision.json</button>
             <button class="btn btn-backup" onclick="document.getElementById('importFileInput').click()">📂 Cargar
                 (.json)</button>
             <input type="file" id="importFileInput" accept=".json" style="display:none"
@@ -1044,16 +1068,16 @@
     </div>
 
     <div class="mode-banner">
-        <div id="modeBannerText">📅 <strong>Día activo: LUNES</strong> · Haz clic en <strong>"🤖 Autocalificar Tarea en
-                Vivo"</strong> para evaluar el entregable y lanzar el cohete automáticamente.</div>
-        <div style="font-size:11.5px; color:#93c5fd;">Tecla <strong>"T"</strong> = Reloj Gigante · Tecla
-            <strong>"P"</strong> = Modo Proyector</div>
+        <div id="modeBannerText">📅 <strong>Día activo: LUNES</strong> · Tablero en vivo de la Operación Rescate
+            Digital.</div>
+        <div style="font-size:11.5px; color:#93c5fd;" id="rightBannerHint">👁️ <strong>Modo Espectador Activo</strong> ·
+            Haz clic en "🔍 Expediente" para ver el detalle de cualquier escuadrón.</div>
     </div>
 
     <!-- Pista de Carrera -->
     <div class="race-container" id="leaderboard"></div>
 
-    <!-- ================= MODAL NUEVO: AUTOCALIFICADOR EN TIEMPO REAL (LUNES A JUEVES) ================= -->
+    <!-- MODAL AUTOCALIFICADOR EN TIEMPO REAL -->
     <div class="modal-overlay" id="autoGraderModal" onclick="if(event.target===this) closeModal('autoGraderModal')">
         <div class="modal-card">
             <div class="modal-header">
@@ -1081,39 +1105,30 @@
             </div>
 
             <div class="ag-grid">
-                <!-- Columna Izquierda: Entrada de archivo / URL -->
                 <div class="ag-box">
                     <div id="agInputInstructions"
                         style="font-size:12.5px; color:#e2e8f0; font-weight:700; margin-bottom:8px;">
                         Sube el archivo o pega su contenido:
                     </div>
-
-                    <!-- Input de archivo local -->
                     <div id="agFileBox" style="margin-bottom:8px;">
                         <input type="file" id="agFileInput" onchange="loadAgFile(event)"
                             style="font-size:12px; color:#93c5fd;">
                     </div>
-
-                    <!-- Input URL GitHub (para Miércoles y opcional en Jueves) -->
                     <div id="agUrlBox" style="display:none; margin-bottom:8px;">
                         <label style="font-size:11.5px; color:#93c5fd;">URL pública del repositorio de GitHub del
                             equipo:</label>
                         <input type="text" class="ag-input-url" id="agGithubUrl"
                             placeholder="https://github.com/usuario/semana-tec-mision">
                     </div>
-
                     <textarea class="ag-textarea" id="agTextContent"
-                        placeholder="Pega aquí el contenido del archivo entregable (o selecciónalo arriba con el botón de archivo)..."></textarea>
-
+                        placeholder="Pega aquí el contenido del archivo entregable..."></textarea>
                     <div style="display:flex; gap:8px; margin-top:10px; justify-content:space-between;">
-                        <button class="btn btn-util" onclick="loadSampleDeliverable()">🧪 Cargar Ejemplo de
-                            Prueba</button>
+                        <button class="btn btn-util" onclick="loadSampleDeliverable()">🧪 Cargar Ejemplo</button>
                         <button class="btn btn-autograde" onclick="runAutoGrader()">⚡ Analizar y Calificar
                             Ahora</button>
                     </div>
                 </div>
 
-                <!-- Columna Derecha: Dictamen de la Rúbrica -->
                 <div class="ag-box" style="display:flex; flex-direction:column; justify-content:space-between;">
                     <div>
                         <div
@@ -1127,21 +1142,20 @@
                         <div id="agRubricBreakdown">
                             <div style="color:#64748b; font-size:12.5px; padding:20px 0; text-align:center;">
                                 Carga el entregable a la izquierda y presiona <strong>"⚡ Analizar y Calificar
-                                    Ahora"</strong> para ver el desglose automático por criterio.
+                                    Ahora"</strong>.
                             </div>
                         </div>
                     </div>
 
                     <div style="border-top:1px solid #334155; padding-top:10px; margin-top:10px;">
                         <div style="font-size:11.5px; color:#fbbf24; margin-bottom:8px;" id="agSuggestedPlaceText">
-                            El lugar del día y los puntos XP se calcularán automáticamente según el orden de llegada y
-                            la nota obtenida.
+                            El lugar del día y los puntos XP se calcularán automáticamente.
                         </div>
                         <div style="display:flex; gap:8px; flex-wrap:wrap;">
                             <button class="btn btn-util" onclick="copyCanvasFeedback()" id="agCopyFeedbackBtn"
-                                disabled>📋 Copiar Retro para Canvas</button>
+                                disabled>📋 Copiar Retro Canvas</button>
                             <button class="btn btn-gold" style="flex:1; justify-content:center;"
-                                onclick="applyAutoGradeToBoard()" id="agApplyBtn" disabled>🚀 Registrar Nota y Lanzar
+                                onclick="applyAutoGradeToBoard()" id="agApplyBtn" disabled>🚀 Registrar y Lanzar
                                 Cohete</button>
                         </div>
                     </div>
@@ -1163,9 +1177,8 @@
             </div>
 
             <div class="members-section">
-                <div style="font-size:13px; font-weight:800; color:#38bdf8;">👥 Integrantes del Equipo (Incluidos en
-                    Ruleta y Excel de Calificaciones para Canvas):</div>
-                <div class="member-inputs">
+                <div style="font-size:13px; font-weight:800; color:#38bdf8;">👥 Integrantes del Escuadrón:</div>
+                <div class="member-inputs teacher-only">
                     <input type="text" id="memNameInput" placeholder="Nombre y Apellido (ej. Ana López)">
                     <input type="text" id="memIdInput" placeholder="Matrícula (ej. A017...)" style="max-width:150px;">
                     <input type="text" id="memMajorInput" placeholder="Carrera (ej. Finanzas / Mecatrónica)"
@@ -1249,9 +1262,13 @@
     <div id="toast"></div>
 
     <script>
-        const STORAGE_KEY = 'semana_tec_leaderboard_v6';
+        // === PIN DE SEGURIDAD DEL PROFESOR ===
+        const TEACHER_PIN = "2026";
+        const STORAGE_KEY = 'semana_tec_leaderboard_v7';
+        let isTeacherUnlocked = false;
+
         const DAYS = [
-            { key: 'lunes', short: 'L', label: '🕵️‍♂️ Lunes (Escape Room Unix)', weight: 0.15 },
+            { key: 'lunes', short: 'L', label: '🕵️‍♂️️ Lunes (Escape Room Unix)', weight: 0.15 },
             { key: 'martes', short: 'M', label: '⚡ Martes (Programación Shell)', weight: 0.15 },
             { key: 'miercoles', short: 'Mi', label: '🌌 Miércoles (Git & Ramas)', weight: 0.15 },
             { key: 'jueves', short: 'J', label: '🤖 Jueves (Código con IA)', weight: 0.15 },
@@ -1282,6 +1299,35 @@
         let lastRouletteTeamId = null;
         let soundEnabled = true;
         let pendingAutoGrade = null;
+
+        // === AUTENTICACIÓN MODO PROFESOR vs MODO ESPECTADOR ALUMNO ===
+        function toggleTeacherAuth() {
+            if (isTeacherUnlocked) {
+                isTeacherUnlocked = false;
+                document.body.classList.add('student-mode');
+                const btn = document.getElementById('teacherLockBtn');
+                btn.textContent = '🔒 Profesor';
+                btn.classList.remove('unlocked');
+                document.getElementById('rightBannerHint').innerHTML = '👁️ <strong>Modo Espectador Activo</strong> · Haz clic en "🔍 Expediente" para ver el detalle de cualquier escuadrón.';
+                render();
+                showToast('🔒 Modo Espectador activado (Controles protegidos).');
+            } else {
+                const pin = prompt('🔑 Ingresa el PIN de Profesor para desbloquear el Centro de Mando:');
+                if (pin === TEACHER_PIN) {
+                    isTeacherUnlocked = true;
+                    document.body.classList.remove('student-mode');
+                    const btn = document.getElementById('teacherLockBtn');
+                    btn.textContent = '🔓 Bloquear';
+                    btn.classList.add('unlocked');
+                    document.getElementById('rightBannerHint').innerHTML = '🔓 <strong>Consola de Profesor Activa</strong> · Tecla "T" = Reloj Gigante · Tecla "L" = Bloquear.';
+                    render();
+                    playSound('boost');
+                    showToast('🔓 ¡Bienvenido, Prof. Alison! Controles desbloqueados.');
+                } else if (pin !== null) {
+                    alert('❌ PIN incorrecto. El tablero permanece en Modo Espectador.');
+                }
+            }
+        }
 
         // === AUDIO SINTETIZADO ===
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -1396,6 +1442,7 @@
         function toggleTimerExpanded() { setTimerExpanded(!isTimerExpanded); }
 
         function startStopTimer() {
+            if (!isTeacherUnlocked) return;
             const btn = document.getElementById('timerPlayBtn');
             if (timerInterval) {
                 clearInterval(timerInterval);
@@ -1421,6 +1468,7 @@
         }
 
         function setTimerMinutes(mins) {
+            if (!isTeacherUnlocked) return;
             if (timerInterval) {
                 clearInterval(timerInterval);
                 timerInterval = null;
@@ -1432,6 +1480,7 @@
         }
 
         function customTimerMinutes() {
+            if (!isTeacherUnlocked) return;
             const val = prompt('¿Cuántos minutos deseas poner en el cronómetro?', '10');
             const mins = parseFloat(val);
             if (!isNaN(mins) && mins > 0) setTimerMinutes(mins);
@@ -1439,11 +1488,11 @@
 
         document.addEventListener('keydown', e => {
             if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
-            if (e.key === 'p' || e.key === 'P') toggleProjectorMode();
             if (e.key === 't' || e.key === 'T') toggleTimerExpanded();
+            if (e.key === 'l' || e.key === 'L') toggleTeacherAuth();
         });
 
-        // === MODELO DE DATOS ===
+        // === MODELO DE DATOS Y SINCRONIZACIÓN AUTOMÁTICA CON GITHUB PAGES ===
         function createEmptyHistory() {
             return {
                 lunes: { place: null, xp: 0, bonus: 0, rubricScore: null, awards: [] },
@@ -1464,15 +1513,25 @@
         ];
 
         let teams = JSON.parse(localStorage.getItem(STORAGE_KEY)) ||
-            JSON.parse(localStorage.getItem('semana_tec_leaderboard_v5')) ||
+            JSON.parse(localStorage.getItem('semana_tec_leaderboard_v6')) ||
             JSON.parse(JSON.stringify(defaultTeams));
 
-        teams.forEach(t => {
-            if (!t.members) t.members = [];
-            DAYS.forEach(d => {
-                if (t.history[d.key].rubricScore === undefined) t.history[d.key].rubricScore = null;
-            });
-        });
+        // Si existe un archivo estado_mision.json publicado en el mismo repositorio de GitHub Pages, cargarlo automáticamente para los alumnos
+        async function tryLoadRemoteStateFromRepo() {
+            try {
+                const res = await fetch('./estado_mision.json?t=' + Date.now());
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && Array.isArray(data.teams) && !isTeacherUnlocked) {
+                        teams = data.teams;
+                        if (data.currentDay) selectDay(data.currentDay);
+                        render();
+                    }
+                }
+            } catch (err) {
+                // Si aún no se ha subido estado_mision.json al repo, usa el estado local sin errores
+            }
+        }
 
         function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(teams)); }
 
@@ -1481,7 +1540,7 @@
             DAYS.forEach(d => {
                 xp += team.history[d.key].xp;
                 bonus += team.history[d.key].bonus;
-                if (team.history[d.key].rubricScore !== null) {
+                if (team.history[d.key].rubricScore !== null && team.history[d.key].rubricScore !== undefined) {
                     gradedCount++;
                     gradeSum += team.history[d.key].rubricScore;
                 }
@@ -1525,20 +1584,16 @@
             render();
         }
 
-        function toggleProjectorMode() {
-            document.body.classList.toggle('projector-mode');
-        }
-
         function updateBanner() {
             const dayObj = DAYS.find(d => d.key === currentDay);
             document.getElementById('modeBannerText').innerHTML = viewOnlyCurrentDay
                 ? `🔎 <strong>FILTRO DIARIO:</strong> Mostrando ranking y calificaciones del <strong>${dayObj.label}</strong>.`
-                : `📅 <strong>Día activo: ${dayObj.label}</strong> · Usa <strong>"🤖 Autocalificar Tarea en Vivo"</strong> para evaluar al instante.`;
+                : `📅 <strong>Día activo: ${dayObj.label}</strong> · Mostrando carrera acumulada de toda la semana.`;
         }
 
         function formatPlacePill(dayShort, dayData) {
-            const scoreTxt = dayData.rubricScore !== null ? ` (${dayData.rubricScore}pts)` : '';
-            if (!dayData.place && dayData.xp === 0 && dayData.rubricScore === null) return `<span class="day-pill">${dayShort}: -</span>`;
+            const scoreTxt = (dayData.rubricScore !== null && dayData.rubricScore !== undefined) ? ` (${dayData.rubricScore}pts)` : '';
+            if (!dayData.place && dayData.xp === 0 && !scoreTxt) return `<span class="day-pill">${dayShort}: -</span>`;
             if (dayData.place === 1) return `<span class="day-pill p-1">${dayShort}: 🥇1°${scoreTxt}</span>`;
             if (dayData.place === 2) return `<span class="day-pill p-2">${dayShort}: 🥈2°${scoreTxt}</span>`;
             if (dayData.place === 3) return `<span class="day-pill p-3">${dayShort}: 🥉3°${scoreTxt}</span>`;
@@ -1569,7 +1624,7 @@
                 const displayXp = viewOnlyCurrentDay ? Math.max(0, dayStats.xp) : totals.xp;
                 const displayBonus = viewOnlyCurrentDay ? dayStats.bonus : totals.bonus;
                 const displayGrade = viewOnlyCurrentDay
-                    ? (dayStats.rubricScore !== null ? `Nota: ${dayStats.rubricScore}` : 'S/C')
+                    ? (dayStats.rubricScore !== null && dayStats.rubricScore !== undefined ? `Nota: ${dayStats.rubricScore}` : 'S/C')
                     : (totals.avgGrade !== null ? `Prom: ${totals.avgGrade}` : 'S/C');
 
                 const rank = idx + 1;
@@ -1587,7 +1642,7 @@
           <div class="rank-badge"></div>
           <div class="team-info">
             <div class="team-header-line">
-              <span class="team-name" title="Clic para renombrar"></span>
+              <span class="team-name"></span>
               <button class="inspect-btn">🔍 Expediente</button>
             </div>
             <div class="daily-places-row"></div>
@@ -1613,8 +1668,8 @@
                 rowEl.querySelector('.rank-badge').textContent = medal;
 
                 const nameEl = rowEl.querySelector('.team-name');
-                nameEl.textContent = `${team.name} ✏️`;
-                nameEl.onclick = () => renameTeam(team.id);
+                nameEl.textContent = isTeacherUnlocked ? `${team.name} ✏️` : team.name;
+                nameEl.onclick = () => { if (isTeacherUnlocked) renameTeam(team.id); };
 
                 rowEl.querySelector('.inspect-btn').onclick = () => openTeamModal(team.id);
                 rowEl.querySelector('.daily-places-row').innerHTML = pillsHtml;
@@ -1654,8 +1709,9 @@
             }, 1350);
         }
 
-        // ================= MOTOR AUTOCALIFICADOR EN TIEMPO REAL (LUNES A JUEVES) =================
+        // === MOTOR AUTOCALIFICADOR EN TIEMPO REAL ===
         function openAutoGraderModal() {
+            if (!isTeacherUnlocked) return;
             const agTeamSelect = document.getElementById('agTeamSelect');
             agTeamSelect.innerHTML = teams.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
             agTeamSelect.value = document.getElementById('teamSelect').value;
@@ -1680,7 +1736,7 @@
             document.getElementById('agTotalScoreBadge').textContent = '-- / 100 pts';
 
             if (day === 'lunes') {
-                instr.textContent = '🕵️‍♂️ Lunes: Selecciona o pega el archivo bitacora_lunes.txt (generado con history > bitacora_lunes.txt):';
+                instr.textContent = '🕵️‍♂️ Lunes: Selecciona o pega el archivo bitacora_lunes.txt:';
                 fileBox.style.display = 'block';
                 urlBox.style.display = 'none';
                 txt.placeholder = 'Pega aquí el historial de comandos de Unix y la clave KRAKEN-APOLO-2026...';
@@ -1690,12 +1746,12 @@
                 urlBox.style.display = 'none';
                 txt.placeholder = '#!/bin/bash\n# Pega aquí el código de control_mision.sh...';
             } else if (day === 'miercoles') {
-                instr.textContent = '🌌 Miércoles: Pega la URL del repositorio de GitHub (se auditará vía API en vivo) o pega su README.md:';
+                instr.textContent = '🌌 Miércoles: Pega la URL del repositorio de GitHub (se auditará vía API en vivo) o su README.md:';
                 fileBox.style.display = 'none';
                 urlBox.style.display = 'block';
-                txt.placeholder = 'Opcional: Pega aquí el contenido del README.md o git log si el repositorio es privado...';
+                txt.placeholder = 'Opcional: Pega aquí el contenido del README.md si el repositorio es privado...';
             } else if (day === 'jueves') {
-                instr.textContent = '🤖 Jueves: Selecciona o pega el archivo DISENO_IA.md (Análisis, Diseño, Código y Auditoría Humana):';
+                instr.textContent = '🤖 Jueves: Selecciona o pega el archivo DISENO_IA.md:';
                 fileBox.style.display = 'block';
                 urlBox.style.display = 'block';
                 txt.placeholder = '# Bitácora de Ingeniería con IA\nPega aquí el contenido de DISENO_IA.md...';
@@ -1713,7 +1769,6 @@
             reader.readAsText(file);
         }
 
-        // Botón para probar el autocalificador en clase con un ejemplo real
         function loadSampleDeliverable() {
             const day = document.getElementById('agDaySelect').value;
             const txt = document.getElementById('agTextContent');
@@ -1733,27 +1788,20 @@
             const day = document.getElementById('agDaySelect').value;
             const text = document.getElementById('agTextContent').value;
             const url = document.getElementById('agGithubUrl').value.trim();
-
             let criteria = [];
 
             if (day === 'lunes') {
-                // Criterio 1: Navegación y búsqueda de 3 pistas (40 pts)
                 const hasLsLa = /ls\s+-[a-zA-Z]*a/i.test(text);
                 const hasGrep = /\bgrep\b/i.test(text);
                 const hasFind = /\bfind\b/i.test(text);
                 const hasClues = /KRAKEN/i.test(text) && /APOLO/i.test(text) && /2026/.test(text);
-                let c1 = 0;
-                if (hasLsLa) c1 += 10;
-                if (hasGrep) c1 += 10;
-                if (hasFind) c1 += 10;
-                if (hasClues) c1 += 10;
+                let c1 = (hasLsLa ? 10 : 0) + (hasGrep ? 10 : 0) + (hasFind ? 10 : 0) + (hasClues ? 10 : 0);
                 criteria.push({
                     name: '1. Navegación Unix y Hallazgo de Pistas',
                     score: c1, max: 40,
                     detail: `ls -la (${hasLsLa ? '✅' : '❌'}) · grep (${hasGrep ? '✅' : '❌'}) · find (${hasFind ? '✅' : '❌'}) · Clave KRAKEN-APOLO-2026 (${hasClues ? '✅' : '❌'})`
                 });
 
-                // Criterio 2: Manipulación y Redirección (30 pts)
                 const hasMkdir = /\bmkdir\b/i.test(text);
                 const hasRedirect = />/.test(text);
                 const hasHistory = /\bhistory\b/i.test(text);
@@ -1764,30 +1812,24 @@
                     detail: `mkdir (${hasMkdir ? '✅' : '❌'}) · Redirección > (${hasRedirect ? '✅' : '❌'}) · Exportación history (${hasHistory ? '✅' : '❌'})`
                 });
 
-                // Criterio 3: Compilación (30 pts)
                 const hasCompile = /\bgcc\b|\bdespegue\b|Wokwi|Compilation|COMPILACI/i.test(text);
                 let c3 = hasCompile ? 30 : 20;
                 criteria.push({
                     name: '3. Compilación en Línea y Corrección de Sintaxis',
                     score: c3, max: 30,
-                    detail: hasCompile ? '✅ Evidencia de compilación detectada en bitácora.' : '⚠️ Verifica visualmente la captura de pantalla de compilación (20/30 base).'
+                    detail: hasCompile ? '✅ Evidencia de compilación detectada.' : '⚠️ Verifica visualmente captura de compilación (20/30 base).'
                 });
-            }
-
-            else if (day === 'martes') {
-                // Criterio 1: Variables y Arreglos (30 pts)
+            } else if (day === 'martes') {
                 const varMatches = text.match(/^[A-Za-z_][A-Za-z0-9_]*=/gm) || [];
                 const hasBadSpaces = /^[A-Za-z_][A-Za-z0-9_]*\s+=/m.test(text);
                 const hasArray = /\([^\)]+\)/.test(text) || /\$\{[A-Za-z0-9_]+\[@\]\}/.test(text);
-                let c1 = (varMatches.length >= 3 ? 15 : 8) + (hasArray ? 15 : 0) - (hasBadSpaces ? 5 : 0);
-                c1 = Math.max(0, Math.min(30, c1));
+                let c1 = Math.max(0, Math.min(30, (varMatches.length >= 3 ? 15 : 8) + (hasArray ? 15 : 0) - (hasBadSpaces ? 5 : 0)));
                 criteria.push({
                     name: '1. Variables, Arreglos y Listas (Tema 2.1)',
                     score: c1, max: 30,
-                    detail: `Variables detectadas: ${varMatches.length} (${varMatches.length >= 3 ? '✅' : '⚠️'}) · Arreglo/Lista (${hasArray ? '✅' : '❌'}) · Sin espacios erróneos en '=' (${!hasBadSpaces ? '✅' : '❌'})`
+                    detail: `Variables: ${varMatches.length} (${varMatches.length >= 3 ? '✅' : '⚠️'}) · Arreglo (${hasArray ? '✅' : '❌'}) · Sin espacios en '=' (${!hasBadSpaces ? '✅' : '❌'})`
                 });
 
-                // Criterio 2: Argumentos y Operadores (35 pts)
                 const hasArgs = /\$1/.test(text) && /\$2/.test(text);
                 const hasArith = /\$\(\([\s\S]+?\)\)|\blet\b|\bexpr\b/.test(text);
                 const hasLogic = /&&|\|\||-ge|-gt|-lt|-le|-eq|==/.test(text);
@@ -1795,26 +1837,21 @@
                 criteria.push({
                     name: '2. Argumentos ($1, $2) y Operadores (Tema 2.2)',
                     score: c2, max: 35,
-                    detail: `Argumentos $1 y $2 (${hasArgs ? '✅' : '❌'}) · Cálculo Aritmético $(( )) (${hasArith ? '✅' : '❌'}) · Operadores Lógicos/Comparación (${hasLogic ? '✅' : '❌'})`
+                    detail: `Argumentos $1 y $2 (${hasArgs ? '✅' : '❌'}) · Aritmética $(( )) (${hasArith ? '✅' : '❌'}) · Operadores Lógicos (${hasLogic ? '✅' : '❌'})`
                 });
 
-                // Criterio 3: Condicionales (35 pts)
                 const hasIf = /\bif\s+\[/.test(text) && /\bthen\b/.test(text) && /\bfi\b/.test(text);
                 const hasElifElse = /\belif\b/.test(text) && /\belse\b/.test(text);
                 const hasShebang = /^#!\/bin\/bash/.test(text.trim());
-                let c3 = (hasIf ? 18 : 0) + (hasElifElse ? 12 : 5) + (hasShebang ? 5 : 0);
-                c3 = Math.min(35, c3);
+                let c3 = Math.min(35, (hasIf ? 18 : 0) + (hasElifElse ? 12 : 5) + (hasShebang ? 5 : 0));
                 criteria.push({
                     name: '3. Estructura Condicional if / elif / else (Tema 2.3)',
                     score: c3, max: 35,
-                    detail: `Shebang #!/bin/bash (${hasShebang ? '✅' : '❌'}) · Bloque if/then/fi (${hasIf ? '✅' : '❌'}) · Ramas elif/else completas (${hasElifElse ? '✅' : '⚠️'})`
+                    detail: `Shebang #!/bin/bash (${hasShebang ? '✅' : '❌'}) · Bloque if/then/fi (${hasIf ? '✅' : '❌'}) · Ramas elif/else (${hasElifElse ? '✅' : '⚠️'})`
                 });
-            }
-
-            else if (day === 'miercoles') {
+            } else if (day === 'miercoles') {
                 let commitsCount = 0, branchesCount = 0, readmeText = text;
                 const matchRepo = url.match(/github\.com\/([^\/]+)\/([^\/\s]+)/i);
-
                 if (matchRepo) {
                     const owner = matchRepo[1];
                     const repo = matchRepo[2].replace(/\.git$/, '');
@@ -1830,12 +1867,8 @@
                             const rData = await rRes.json();
                             readmeText += '\n' + decodeURIComponent(escape(atob(rData.content.replace(/\n/g, ''))));
                         }
-                    } catch (e) {
-                        console.warn('Error consultando API GitHub, evaluando con texto local.');
-                    }
+                    } catch (e) { }
                 }
-
-                // Si no usaron API o además pegaron texto, detectar ramas mencionadas
                 const textBranches = (readmeText.match(/rama-[a-z0-9_-]+/gi) || []);
                 const effectiveBranches = Math.max(branchesCount, new Set(textBranches).size);
                 const effectiveCommits = commitsCount > 0 ? commitsCount : (readmeText.length > 150 ? 6 : 0);
@@ -1862,16 +1895,14 @@
                     score: c3, max: 30,
                     detail: `Documentado en README (${hasConflictDoc ? '✅' : '❌'}) · Sin marcas rotas <<<<<<< (${!hasBrokenMarkers ? '✅ Limpio' : '❌ Dejaron marcas'})`
                 });
-            }
-
-            else if (day === 'jueves') {
+            } else if (day === 'jueves') {
                 const hasAnalysis = /an[aá]lisis|entradas|reglas|salidas|prompt/i.test(text);
                 const hasDesignTable = /\|.*\|.*\|/.test(text) && /pin|diagrama|flujo|dise[nñ]o/i.test(text);
                 const c1 = (hasAnalysis ? 18 : 8) + (hasDesignTable ? 17 : 7);
                 criteria.push({
                     name: '1. Fase 1 (Análisis) y Fase 2 (Diseño y Tabla de Pines)',
                     score: c1, max: 35,
-                    detail: `Análisis de Entradas/Reglas/Salidas (${hasAnalysis ? '✅' : '❌'}) · Tabla de Pines y Diagrama (${hasDesignTable ? '✅' : '❌'})`
+                    detail: `Análisis Entradas/Reglas/Salidas (${hasAnalysis ? '✅' : '❌'}) · Tabla de Pines y Diagrama (${hasDesignTable ? '✅' : '❌'})`
                 });
 
                 const hasCodeRef = /\.sh|\.ino|wokwi|arduino|python|serial/i.test(text);
@@ -1887,15 +1918,14 @@
                 criteria.push({
                     name: '3. Auditoría Humana Crítica del Código de IA',
                     score: c3, max: 30,
-                    detail: `Documentación del error corregido a la IA (${hasAudit ? '✅ Explicado con criterio propio' : '❌ Falta explicar qué corrigieron'})`
+                    detail: `Documentación del error corregido a la IA (${hasAudit ? '✅ Explicado' : '❌ Falta explicar qué corrigieron'})`
                 });
             }
 
             const totalScore = criteria.reduce((acc, c) => acc + c.score, 0);
             document.getElementById('agTotalScoreBadge').textContent = `${totalScore} / 100 pts`;
 
-            const breakdownEl = document.getElementById('agRubricBreakdown');
-            breakdownEl.innerHTML = criteria.map(c => {
+            document.getElementById('agRubricBreakdown').innerHTML = criteria.map(c => {
                 const ratio = c.score / c.max;
                 const statusClass = ratio >= 0.9 ? 'pass' : ratio >= 0.7 ? 'partial' : 'fail';
                 return `
@@ -1909,7 +1939,6 @@
       `;
             }).join('');
 
-            // Calcular qué lugar del día le toca automáticamente según cuántos equipos ya entregaron hoy
             const alreadyPlacedCount = teams.filter(t => t.history[day].place !== null).length;
             const nextPlace = alreadyPlacedCount + 1;
             const placeRewards = {
@@ -1920,7 +1949,7 @@
             const reward = placeRewards[nextPlace] || { xp: 150, bonus: 2, label: `✅ ${nextPlace}° Lugar / Misión Completada` };
 
             document.getElementById('agSuggestedPlaceText').innerHTML =
-                `🏆 <strong>Asignación automática por orden de entrega:</strong> Puesto <strong>#${nextPlace}° del día</strong> (${reward.label} · <strong>+${reward.xp} XP</strong> y <strong>+${reward.bonus} pts bono</strong>).`;
+                `🏆 <strong>Asignación automática:</strong> Puesto <strong>#${nextPlace}° del día</strong> (${reward.label} · <strong>+${reward.xp} XP</strong> y <strong>+${reward.bonus} pts bono</strong>).`;
 
             pendingAutoGrade = {
                 teamId: parseInt(document.getElementById('agTeamSelect').value, 10),
@@ -1950,11 +1979,11 @@
                 ...pendingAutoGrade.criteria.map(c => `• ${c.name}: ${c.score}/${c.max} pts -> ${c.detail}`)
             ];
             navigator.clipboard.writeText(lines.join('\n'));
-            showToast('📋 Retroalimentación copiada al portapapeles para pegar en Canvas.');
+            showToast('📋 Retroalimentación copiada al portapapeles.');
         }
 
         function applyAutoGradeToBoard() {
-            if (!pendingAutoGrade) return;
+            if (!pendingAutoGrade || !isTeacherUnlocked) return;
             const team = teams.find(t => t.id === pendingAutoGrade.teamId);
             if (!team) return;
 
@@ -1982,8 +2011,9 @@
             showToast(`🚀 ¡${team.name} obtuvo ${pendingAutoGrade.totalScore}/100 pts y despegó en #${pendingAutoGrade.place}° lugar!`);
         }
 
-        // === PREMIACIÓN MANUAL Y MODALES EXISTENTES ===
+        // === PREMIACIÓN MANUAL Y MODALES ===
         function awardPlace(placeNum, xpAmount, bonusAmount, label) {
+            if (!isTeacherUnlocked) return;
             const id = parseInt(document.getElementById('teamSelect').value, 10);
             const team = teams.find(t => t.id === id);
             if (!team) return;
@@ -2009,6 +2039,7 @@
         }
 
         function awardBonus(xpAmount, bonusAmount, label, customTeamId) {
+            if (!isTeacherUnlocked) return;
             const id = customTeamId || parseInt(document.getElementById('teamSelect').value, 10);
             const team = teams.find(t => t.id === id);
             if (!team) return;
@@ -2046,7 +2077,7 @@
             content.innerHTML = DAYS.map(d => {
                 const rec = team.history[d.key];
                 const placeBadge = rec.place ? `🏆 Lugar: #${rec.place}°` : 'Sin lugar registrado';
-                const gradeBadge = rec.rubricScore !== null ? ` · 📝 Nota Rúbrica: ${rec.rubricScore}/100` : '';
+                const gradeBadge = (rec.rubricScore !== null && rec.rubricScore !== undefined) ? ` · 📝 Nota Rúbrica: ${rec.rubricScore}/100` : '';
                 const awardsList = rec.awards.length
                     ? rec.awards.map(a => `<span class="award-tag">${a}</span>`).join('')
                     : `<span style="color:#64748b; font-size:12px;">Sin movimientos este día.</span>`;
@@ -2077,12 +2108,13 @@
             container.innerHTML = team.members.map((m, idx) => `
       <span class="member-chip">
         👤 <strong>${m.name}</strong> (${m.studentId || 'S/M'} · ${m.major || 'General'})
-        <span onclick="removeMemberFromActiveTeam(${idx})" title="Eliminar">✖</span>
+        ${isTeacherUnlocked ? `<span onclick="removeMemberFromActiveTeam(${idx})" title="Eliminar">✖</span>` : ''}
       </span>
     `).join('');
         }
 
         function addMemberToActiveTeam() {
+            if (!isTeacherUnlocked) return;
             const team = teams.find(t => t.id === activeModalTeamId);
             if (!team) return;
             const name = document.getElementById('memNameInput').value.trim();
@@ -2100,6 +2132,7 @@
         }
 
         function removeMemberFromActiveTeam(idx) {
+            if (!isTeacherUnlocked) return;
             const team = teams.find(t => t.id === activeModalTeamId);
             if (!team) return;
             team.members.splice(idx, 1);
@@ -2108,7 +2141,10 @@
             render();
         }
 
-        function openRouletteModal() { document.getElementById('rouletteModal').classList.add('open'); }
+        function openRouletteModal() {
+            if (!isTeacherUnlocked) return;
+            document.getElementById('rouletteModal').classList.add('open');
+        }
 
         function spinRoulette() {
             const rTeam = document.getElementById('rTeamName');
@@ -2146,6 +2182,7 @@
         }
 
         function openShopModal() {
+            if (!isTeacherUnlocked) return;
             const id = parseInt(document.getElementById('teamSelect').value, 10);
             const team = teams.find(t => t.id === id);
             if (!team) return;
@@ -2155,6 +2192,7 @@
         }
 
         function buyPowerUp(costXp, itemLabel) {
+            if (!isTeacherUnlocked) return;
             const id = parseInt(document.getElementById('teamSelect').value, 10);
             const team = teams.find(t => t.id === id);
             if (!team) return;
@@ -2179,6 +2217,7 @@
         function closeModal(modalId) { document.getElementById(modalId).classList.remove('open'); }
 
         function renameTeam(id) {
+            if (!isTeacherUnlocked) return;
             const team = teams.find(t => t.id === id);
             if (!team) return;
             const newName = prompt('Nuevo nombre para el equipo:', team.name);
@@ -2190,6 +2229,7 @@
         }
 
         function addTeam() {
+            if (!isTeacherUnlocked) return;
             const name = prompt('Nombre del nuevo equipo:', `Escuadrón ${teams.length + 1}`);
             if (!name || !name.trim()) return;
             historyStack.push(JSON.stringify(teams));
@@ -2200,14 +2240,15 @@
         }
 
         function undoLast() {
-            if (!historyStack.length) { showToast('⚠️️ No hay acciones para deshacer.'); return; }
+            if (!isTeacherUnlocked || !historyStack.length) { showToast('⚠ No hay acciones para deshacer.'); return; }
             teams = JSON.parse(historyStack.pop());
             saveState();
             render();
-            showToast('↩️️ Última acción deshecha.');
+            showToast('↩ Última acción deshecha.');
         }
 
         function resetBoard() {
+            if (!isTeacherUnlocked) return;
             if (confirm('¿Seguro que deseas reiniciar todos los puntos y calificaciones a cero?')) {
                 historyStack.push(JSON.stringify(teams));
                 teams.forEach(t => { t.history = createEmptyHistory(); });
@@ -2217,17 +2258,19 @@
             }
         }
 
+        // Descarga el archivo con el nombre exacto "estado_mision.json" para subirlo al repositorio y que los alumnos vean los cambios
         function exportBackupJSON() {
-            const backupPayload = { version: 6.0, exportedAt: new Date().toISOString(), currentDay, teams };
+            const backupPayload = { version: 7.0, exportedAt: new Date().toISOString(), currentDay, teams };
             const blob = new Blob([JSON.stringify(backupPayload, null, 2)], { type: 'application/json' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = `respaldo_semana_tec_${new Date().toISOString().slice(0, 10)}.json`;
+            link.download = `estado_mision.json`;
             link.click();
-            showToast('💾 Respaldo .json descargado.');
+            showToast('💾 estado_mision.json descargado. Súbelo al repo para actualizar la vista de los alumnos.');
         }
 
         function importBackupJSON(event) {
+            if (!isTeacherUnlocked) return;
             const file = event.target.files[0];
             if (!file) return;
             const reader = new FileReader();
@@ -2242,7 +2285,7 @@
                     if (parsed.currentDay) selectDay(parsed.currentDay);
                     saveState();
                     render();
-                    showToast('✅ ¡Respaldo restaurado con éxito!');
+                    showToast('✅ ¡Estado cargado con éxito!');
                 } catch (err) {
                     alert('Error al leer el archivo .json.');
                 }
@@ -2284,6 +2327,7 @@
 
         renderTimer();
         render();
+        tryLoadRemoteStateFromRepo();
     </script>
 </body>
 
