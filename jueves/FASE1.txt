@@ -1,0 +1,13 @@
+Actúa como un Arquitecto de Soluciones Tecnológicas y mentor universitario.
+Somos un equipo multidisciplinario de estudiantes (Carreras: [listar carreras del equipo]) 
+y queremos construir un prototipo en [Arduino / ESP32 / Simulador Wokwi / Python] controlado 
+desde un script de Bash en la terminal.
+
+Nuestra idea inicial es: [Ej. Un sistema de seguridad para almacenes / Un sistema de eyección 
+de paracaídas para un cohete / Una araña o brazo robótico que reacciona a comandos].
+
+IMPORTANTE: Todavía NO generes código. Primero ayúdanos con la FASE DE ANÁLISIS:
+1. Aterriza nuestra idea en un caso de uso realista que podamos construir y demostrar en 3 horas.
+2. Define 3 Entradas (argumentos desde el script de Bash o sensores del circuito).
+3. Define 3 Reglas de Negocio / Condiciones Lógicas claras.
+4. Define 3 Salidas físicas o visuales (movimiento de servomotores, luces LED, alertas en consola).

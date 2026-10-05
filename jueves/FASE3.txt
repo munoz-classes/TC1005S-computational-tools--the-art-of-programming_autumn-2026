@@ -1,0 +1,9 @@
+Ahora pasa a la FASE DE GENERACIÓN DE CÓDIGO siguiendo exactamente el diseño anterior:
+1. Genera el script en Bash ("control_mision.sh") que utilice al menos 3 variables, 1 arreglo, 
+   reciba 2 argumentos por línea de comandos ($1, $2), realice 1 cálculo aritmético y use 
+   condicionales (if/elif/else) para generar el comando de salida hacia el hardware.
+2. Genera el código completo y comentado para [Arduino C++ / MicroPython] listo para copiarse 
+   en Wokwi.com o en la tarjeta física, que lea por el Puerto Serial el comando generado por 
+   el script de Bash y active los componentes de la tabla de pines.
+3. Incluye comentarios línea por línea para que cualquier integrante del equipo (incluso si 
+   no es de ingeniería) pueda explicar cómo funciona cada bloque en nuestra defensa oral.

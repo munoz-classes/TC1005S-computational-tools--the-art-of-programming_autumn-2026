@@ -1,0 +1,9 @@
+Excelente. Con base en el análisis anterior, pasa a la FASE DE DISEÑO (todavía sin escribir 
+el código final):
+1. Genera una tabla exacta de conexiones electrónicas (Pinout) para armar el circuito en 
+   [Arduino Uno / ESP32] dentro del simulador Wokwi o en físico, usando componentes sencillos 
+   (Servomotor, LEDs, Sensor Ultrasónico o Botones).
+2. Diseña un diagrama de flujo en formato texto/Mermaid que muestre cómo viaja la orden desde 
+   que el usuario ejecuta "./control_mision.sh <ARG1> <ARG2>" en la terminal Unix hasta que 
+   la tarjeta electrónica actúa.
+3. Define qué archivos tendrá nuestro repositorio de Git y qué rama se encargará de cada uno.
