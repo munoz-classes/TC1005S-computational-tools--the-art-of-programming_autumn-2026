@@ -5,7 +5,7 @@
 # Resultado: Genera la carpeta "Mision_Rescate" y el archivo "misterio_dia1.zip"
 # ==============================================================================
 
-echo "🔧 Construyendo el escenario del Escape Room Forense..."
+echo "Construyendo el escenario del Escape Room Forense..."
 
 # Limpiar versión previa si existe
 rm -rf Mision_Rescate misterio_dia1.zip
@@ -18,7 +18,7 @@ mkdir -p Mision_Rescate/Ingenieria/{Prototipos_Araña,Telemetria_Cohete,Modulos_
 # 2. Crear archivo de bienvenida (Punto de partida del alumno)
 cat << 'EOF' > Mision_Rescate/LEEME_URGENTE.txt
 =======================================================================
-🚨 ALERTA DE SEGURIDAD - OPERACIÓN RESCATE DIGITAL (SEMANA TEC) 🚨
+ALERTA DE SEGURIDAD - OPERACIÓN RESCATE DIGITAL (SEMANA TEC)
 =======================================================================
 El servidor central del laboratorio de prototipos fue saboteado anoche.
 El sistema de lanzamiento y los robots quedaron bloqueados.
@@ -31,7 +31,7 @@ REGLAS DE LA MISIÓN:
 2. Usa comandos de Unix (ls, cd, cat, find, grep, mkdir, cp, mv).
 
 -----------------------------------------------------------------------
-🔎 MISION 1 (Archivos Ocultos):
+MISION 1 (Archivos Ocultos):
 El saboteador escondió la PISTA 1 en una carpeta oculta (recuerda que en
 Unix los archivos y carpetas ocultos empiezan con un punto ".") dentro
 del departamento de "Ingenieria".
@@ -55,10 +55,10 @@ done
 mkdir -p Mision_Rescate/Ingenieria/Telemetria_Cohete/.boveda_secreta
 cat << 'EOF' > Mision_Rescate/Ingenieria/Telemetria_Cohete/.boveda_secreta/.pista_1.txt
 =======================================================================
-✅ ¡FELICIDADES! Encontraste la PISTA 1 usando "ls -la" y "cat".
+¡FELICIDADES! Encontraste la PISTA 1 usando "ls -la" y "cat".
 >> PISTA 1: [ KRAKEN ]
 -----------------------------------------------------------------------
-🔎 MISION 2 (Búsqueda rápida entre cientos de archivos con "grep"):
+MISION 2 (Búsqueda rápida entre cientos de archivos con "grep"):
 El saboteador dejó la PISTA 2 escrita dentro de uno de los 40 archivos
 de registro en la carpeta "Servidores_Logs/Marzo/".
 Abrir los 40 archivos uno por uno te tomaría demasiado tiempo.
@@ -77,10 +77,10 @@ EOF
 mkdir -p Mision_Rescate/Servidores_Logs/Respaldo_Antiguo/2024/Temp/Cache_Oculto/Nivel_Profundo
 cat << 'EOF' > Mision_Rescate/Servidores_Logs/Respaldo_Antiguo/2024/Temp/Cache_Oculto/Nivel_Profundo/llave_maestra.key
 =======================================================================
-🏆 ¡MISIÓN FORENSE COMPLETADA! Localizaste el archivo con "find".
+¡MISIÓN FORENSE COMPLETADA! Localizaste el archivo con "find".
 >> PISTA 3: [ 2026 ]
 -----------------------------------------------------------------------
-🔑 TU CLAVE DE ACTIVACIÓN COMPLETA ES: KRAKEN-APOLO-2026
+TU CLAVE DE ACTIVACIÓN COMPLETA ES: KRAKEN-APOLO-2026
 
 PASO FINAL EN LA TERMINAL:
 1. Regresa a la carpeta principal "Mision_Rescate".
@@ -116,13 +116,13 @@ int main() {
     int conteo = 3
 
     printf("============================================\n");
-    printf("🚀 SISTEMA DE LANZAMIENTO RECUPERADO 🚀\n");
+    printf("SISTEMA DE LANZAMIENTO RECUPERADO \n");
     printf("Agente a cargo: %s\n", agente);
     printf("Clave ingresada: %s\n", clave);
     printf("Iniciando secuencia en T-menos %d segundos...\n", conteo);
 
     // ERROR 2: La comilla de cierre o el paréntesis están mal aquí...
-    printf("✅ COMPILACIÓN EXITOSA: ¡Despegue autorizado!\n";
+    printf("COMPILACIÓN EXITOSA: ¡Despegue autorizado!\n";
 
     return 0;
 }
@@ -131,7 +131,7 @@ EOF
 # 8. Comprimir todo en misterio_dia1.zip si zip está instalado
 if command -v zip &> /dev/null; then
     zip -rq misterio_dia1.zip Mision_Rescate
-    echo "✅ ¡Listo! Se creó la carpeta 'Mision_Rescate' y el archivo 'misterio_dia1.zip'."
+    echo "¡Listo! Se creó la carpeta 'Mision_Rescate' y el archivo 'misterio_dia1.zip'."
 else
-    echo "✅ ¡Listo! Se creó la carpeta 'Mision_Rescate' (puedes comprimirla en .zip para subirla a Canvas)."
+    echo "¡Listo! Se creó la carpeta 'Mision_Rescate' (puedes comprimirla en .zip para subirla a Canvas)."
 fi

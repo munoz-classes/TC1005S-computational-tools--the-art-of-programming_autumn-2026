@@ -1,0 +1,94 @@
+name: Evaluador Misiones Semana Tec
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  evaluar-retos:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Clonar código del estudiante
+        uses: actions/checkout@v3
+
+      # LUNES: Compilación en C (Escape Room Forense)
+      - name: Lunes - Compilación (C)
+        run: |
+          echo "Verificando codigo_cohete_roto.c..."
+          if [ -f "codigo_cohete_roto.c" ]; then
+            # El '2> /dev/null' oculta los errores técnicos de gcc para no asustarlos
+            if gcc codigo_cohete_roto.c -o cohete 2> /dev/null; then
+              echo "✅ ¡Motores listos! El código compiló sin errores."
+            else
+              echo "⚠️ Falla crítica en los propulsores."
+              echo "El compilador (gcc) intentó ensamblar el 'codigo_cohete_roto.c' pero encontró piezas sueltas."
+              echo "Pista: Revisa si olvidaste poner un punto y coma (;) al final de una línea o cerrar una llave {}."
+              exit 1
+            fi
+          else
+            echo "❌ Misión Fallida: No se encontró el archivo 'codigo_cohete_roto.c'. ¿Seguro que lo agregaste con 'git add'?"
+            exit 1
+          fi
+
+      # MARTES: Programación Shell (Tablero de Mando)
+      - name: Martes - Tablero de Mando (Bash)
+        # continue-on-error permite que si es lunes, el sistema no marque rojo todo el repositorio por no tener lo del martes
+        continue-on-error: true
+        run: |
+          if [ ! -f "control_mision.sh" ]; then
+            echo "Esperando archivo del martes..."
+            exit 1
+          fi
+
+          chmod +x control_mision.sh
+          # Probamos el escenario de éxito
+          SALIDA=$(./control_mision.sh DESPEGUE 100 2> /dev/null)
+          if [[ "$SALIDA" == *"CMD_LAUNCH"* ]]; then
+            echo "✅ Sistema de navegación online. Lógica condicional de despegue superada."
+          else
+            echo "❌ Anomalía detectada en el Tablero de Mando."
+            echo "Al enviar la orden 'DESPEGUE' con energía en 100, la consola esperaba leer 'CMD_LAUNCH'."
+            echo "Tu script respondió con: '$SALIDA'"
+            echo "Pista: Revisa la Presentación Marp del Día 2. En Bash, los espacios dentro de los corchetes [ ] del 'if' son obligatorios."
+            exit 1
+          fi
+
+      # MIÉRCOLES: La Máquina del Tiempo (Git y GitHub)
+      - name: ⏱️ Miércoles - Resolución de Conflictos (Git)
+        continue-on-error: true
+        run: |
+          echo "Escaneando el espacio-tiempo en README.md..."
+          if [ ! -f "README.md" ]; then
+            echo "❌ Anomalía temporal: No se encontró el archivo README.md."
+            exit 1
+          fi
+
+          # Verifica si los alumnos olvidaron borrar los marcadores de Git al hacer el merge
+          if grep -qE "<<<<<<<|=======|>>>>>>>" README.md; then
+            echo "❌ Colisión de líneas de tiempo detectada."
+            echo "El archivo README.md todavía tiene las marcas de conflicto generadas por Git (<<<<<<<, ======= o >>>>>>>)."
+            echo "Pista: Entra al archivo, decide qué versión de la línea quieres conservar, borra las marcas extrañas, guarda y vuelve a hacer commit y push."
+            exit 1
+          else
+            echo "✅ Paradoja temporal resuelta. El Merge Conflict fue solucionado limpiamente sin dejar rastros del sabotaje."
+          fi
+
+      # JUEVES: Auditoría IA y Wokwi
+      - name: Jueves - Auditoría IA
+        continue-on-error: true
+        run: |
+          if [ ! -f "DISENO_IA.md" ]; then
+            echo "Esperando archivo de auditoría del jueves..."
+            exit 1
+          fi
+
+          # Busca si incluyeron palabras clave que demuestren que auditaron a la IA
+          if grep -q -iE "error|alucinación|falla|corregí|falso" "DISENO_IA.md"; then
+            echo "✅ Auditoría humana exitosa. Detectaste el comportamiento anómalo de la IA."
+          else
+            echo "❌ Reporte de auditoría incompleto."
+            echo "El archivo DISENO_IA.md no contiene evidencia de haber analizado las fallas de Gemini/ChatGPT."
+            echo "Pista: Usa palabras como 'error' o 'alucinación' para describir qué se equivocó la IA en su tabla de pines."
+            exit 1
+          fi
