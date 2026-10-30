@@ -365,7 +365,7 @@ style: |
   <div class="card dark center-layout" style="width: 100%; max-width: 650px; padding: 30px;">
     <i class="fa-solid fa-stopwatch" style="font-size: 3em; color: var(--electric); margin-bottom: 10px;"></i>
     <div style="font-family: 'Fira Code', monospace; font-size: 4em; color: var(--white); margin-bottom: 10px; font-weight: 700; text-shadow: 0 0 20px rgba(0,210,252,0.4);">
-      15:00
+      25:00
     </div>
     <h3 style="color: var(--electric); margin-bottom: 10px; font-size: 1.2em;">Tiempo de Ideación</h3>
     <p style="font-size: 0.85em; color: #9CA3AF; margin: 0; line-height: 1.4; text-align: center;">
@@ -390,7 +390,7 @@ style: |
     <div class="card center-layout" style="padding: 20px; border-top-color: var(--dark);">
       <i class="fa-solid fa-stopwatch tech-icon" style="color: var(--dark); font-size: 2em; margin-bottom: 10px;"></i>
       <h3 style="margin-bottom: 8px; font-size: 1.1em;">1. Ideación</h3>
-      <p style="font-size: 0.75em; text-align: center; margin: 0; line-height: 1.3;">Tienen <b>15 minutos</b> en equipo para identificar un proceso lento en sus carreras y diseñar una solución basada en las herramientas de la semana.</p>
+      <p style="font-size: 0.75em; text-align: center; margin: 0; line-height: 1.3;">Tienen <b>25 minutos</b> en equipo para identificar un proceso lento en sus carreras y diseñar una solución basada en las herramientas de la semana.</p>
     </div>    
     <div class="card violet center-layout" style="padding: 20px; background: rgba(123, 44, 191, 0.03);">
       <i class="fa-solid fa-microphone tech-icon" style="color: var(--violet); font-size: 2em; margin-bottom: 10px;"></i>
@@ -481,7 +481,7 @@ style: |
   <div class="card dark center-layout" style="width: 100%; max-width: 650px; padding: 30px;">
     <i class="fa-solid fa-stopwatch" style="font-size: 3em; color: var(--electric); margin-bottom: 10px;"></i>
     <div style="font-family: 'Fira Code', monospace; font-size: 4em; color: var(--white); margin-bottom: 10px; font-weight: 700; text-shadow: 0 0 20px rgba(0,210,252,0.4);">
-      15:00
+      25:00
     </div>
     <h3 style="color: var(--electric); margin-bottom: 10px; font-size: 1.2em;">Tiempo de Ideación</h3>
     <p style="font-size: 0.85em; color: #9CA3AF; margin: 0; line-height: 1.4; text-align: center;">
